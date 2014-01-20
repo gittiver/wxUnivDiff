@@ -13,10 +13,9 @@ public:
         };
     wxUnivDiffApp(void);
     virtual ~wxUnivDiffApp(void);
-
-    void info(const wxString& message);
-    void warn(const wxString& message);
-    void error(const wxString& message);
+  
+    virtual void OnInitCmdLine(wxCmdLineParser& parser);
+    virtual bool OnCmdLineParsed	(	wxCmdLineParser & 	parser	);
 
 protected:
 	bool OnInit(void);

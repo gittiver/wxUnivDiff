@@ -2,12 +2,14 @@
 #include <wx/cmdproc.h>
 #include <wx/menu.h>
 #include <wx/image.h>
-
-
+#include <wx/cmdline.h>
+#include <wx/process.h>
+#include <wx/stream.h>
 
 #include "wxUnivDiffApp.hpp"
 
-#include "MainFrame.h"
+//#include "MainFrame.h"
+#include "ui.h"
 
 IMPLEMENT_APP(wxUnivDiffApp)
 
@@ -17,6 +19,64 @@ wxUnivDiffApp::wxUnivDiffApp(void)
 wxUnivDiffApp::~wxUnivDiffApp(void)
 {}
 
+static const wxCmdLineEntryDesc cmdLineDesc[] =
+{
+  { wxCMD_LINE_SWITCH, "v", "verbose", "be verbose" },
+  //{ wxCMD_LINE_SWITCH, "q", "quiet",   "be quiet" },
+  
+  // { wxCMD_LINE_OPTION, "o", "output",  "output file" },
+  { wxCMD_LINE_OPTION, "i", "interactive",   "interactive mode" },
+  
+  { wxCMD_LINE_OPTION, "l", "list",   "list " },
+  { wxCMD_LINE_OPTION, "a", "add",   "add entry" },
+  { wxCMD_LINE_OPTION, "del", "del",   "del entry" },
+  
+  
+  { wxCMD_LINE_PARAM,  NULL, NULL, "input file", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_MULTIPLE },
+  
+  { wxCMD_LINE_NONE }
+};
+
+enum {
+  INTERACTIVE,
+  LIST,
+  ADD,
+  DEL,
+  EDIT,
+  DIFF
+} mode;
+
+void wxUnivDiffApp::OnInitCmdLine(wxCmdLineParser& parser)
+{
+  parser.SetDesc(cmdLineDesc);
+}
+
+bool wxUnivDiffApp::OnCmdLineParsed	(	wxCmdLineParser & 	parser	)
+{
+  size_t c = parser.GetParamCount();
+  if (c>1)
+  {
+    mode = DIFF;
+  }
+  else
+  {
+    mode = INTERACTIVE;
+  }
+  return true;
+}
+
+class Pp : public wxProcess {
+public:
+  virtual void OnTerminate(int pid, int status)
+  {
+    wxLogDebug("x");
+  }
+};
+
+Pp p;
+
+using namespace ui;
+
 bool wxUnivDiffApp::OnInit(void)
 {
   ::wxInitAllImageHandlers();
@@ -24,9 +84,21 @@ bool wxUnivDiffApp::OnInit(void)
   if ( !wxApp::OnInit() )
     return false;
   
+//  wxArrayString r;
+//  // long result = wxShell("echo abc; exit", r);
+//  p.Redirect();
+//  long  result =  wxExecute("date",wxEXEC_ASYNC,&p);
+//  wxInputStream* in = p.GetInputStream();
+//  
+//  wxChar buf[1024];
+//  while(in->CanRead())
+//  {
+//    in->ReadAll(buf,sizeof(buf));
+//    wxLogDebug(buf);
+//  };
   // Create the main frame window
-  MyFrame *frame = new MyFrame(wxT("wxListCtrl Test"));
-  
+  //MyFrame *frame = new MyFrame(wxT("wxListCtrl Test"));
+  MainFrame *frame = new MainFrame(NULL,wxID_ANY,wxT("tesme"));
   // Show the frame
   frame->Show(true);
   
@@ -55,32 +127,3 @@ bool wxUnivDiffApp::OnInit(void)
 */
 }
 
-void wxUnivDiffApp::info(const wxString& message)
-{
-  //Log entry(*pDatabase);
-  //DateTime now;
-  //entry.createdAt = now; 
-  //entry.severity = Log::Severity::INFO;
-  //entry.message= message.ToUTF8().data();
-  //entry.update();
-}
-
-void wxUnivDiffApp::warn(const wxString& message)
-{
-  //Log entry(*pDatabase);
-  //DateTime now;
-  //entry.createdAt = now; 
-  //entry.severity = Log::Severity::INFO;
-  //entry.message = message.ToUTF8().data();
-  //entry.update();
-}
-
-void wxUnivDiffApp::error(const wxString& message)
-{
-  //Log entry(*pDatabase);
-  //DateTime now;
-  //entry.createdAt = now; 
-  //entry.severity = Log::Severity::INFO;
-  //entry.message = message.ToUTF8().data();
-  //entry.update();
-}
