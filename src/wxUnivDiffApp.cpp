@@ -32,7 +32,7 @@ static const wxCmdLineEntryDesc cmdLineDesc[] =
   { wxCMD_LINE_OPTION, "del", "del",   "del entry" },
   
   
-  { wxCMD_LINE_PARAM,  NULL, NULL, "input file", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_MULTIPLE },
+  { wxCMD_LINE_PARAM,  NULL, NULL, "input file", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_MULTIPLE| wxCMD_LINE_PARAM_OPTIONAL },
   
   { wxCMD_LINE_NONE }
 };
@@ -46,13 +46,27 @@ enum {
   DIFF
 } mode;
 
+bool verbose;
+bool list;
+bool add;
+bool del;
+
 void wxUnivDiffApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
-  parser.SetDesc(cmdLineDesc);
+   parser.SetDesc(cmdLineDesc);
 }
 
 bool wxUnivDiffApp::OnCmdLineParsed	(	wxCmdLineParser & 	parser	)
 {
+   verbose = parser.FoundSwitch("v")==wxCMD_SWITCH_ON;
+   if (parser.FoundSwitch("i")==wxCMD_SWITCH_ON)
+      mode = INTERACTIVE;
+
+   parser.FoundSwitch("l")==wxCMD_SWITCH_ON;
+   parser.FoundSwitch("a")==wxCMD_SWITCH_ON;
+   parser.FoundSwitch("del")==wxCMD_SWITCH_ON;
+
+
   size_t c = parser.GetParamCount();
   if (c>1)
   {
@@ -104,7 +118,7 @@ bool wxUnivDiffApp::OnInit(void)
   
   return true;
 /*
-	// start transaction
+   // start transaction
   //// Give it an icon (this is ignored in MDI mode: uses resources)
 #ifdef __WXMSW__
   pMainframe->SetIcon(wxIcon(_T("doc")));
@@ -123,7 +137,7 @@ bool wxUnivDiffApp::OnInit(void)
 #ifndef __WXMAC__
   pMainframe->Show(true);
 #endif //ndef __WXMAC__
-	return true;
+   return true;
 */
 }
 

@@ -1,7 +1,6 @@
 set(PROGRAM_wxUnivDiff "wxUnivDiff")
 set(PROGRAM_wxUnivDiff_SOURCES  
         wxUnivDiffApp.cpp wxUnivDiffApp.hpp 
-#        MainFrame.cpp MainFrame.h
     ui.cpp ui.h
 )
 
