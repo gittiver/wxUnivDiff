@@ -112,7 +112,7 @@ bool wxUnivDiffApp::OnInit(void)
 //  };
   // Create the main frame window
   //MyFrame *frame = new MyFrame(wxT("wxListCtrl Test"));
-  MainFrame *frame = new MainFrame(NULL,wxID_ANY,wxT("tesme"));
+  MainFrame2 *frame = new MainFrame2(NULL,wxID_ANY,wxT("tesme"));
   // Show the frame
   frame->Show(true);
   

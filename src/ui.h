@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Sep 12 2010)
+// C++ code generated with wxFormBuilder (version Sep  8 2010)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -25,13 +25,16 @@
 #include <wx/notebook.h>
 #include <wx/listctrl.h>
 #include <wx/splitter.h>
-#include <wx/menu.h>
-#include <wx/statusbr.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
+#include <wx/menu.h>
+#include <wx/statusbr.h>
+#include <wx/combobox.h>
 #include <wx/toolbar.h>
 #include <wx/frame.h>
+#include <wx/listbook.h>
+#include <wx/aui/auibook.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -65,6 +68,11 @@ namespace ui
 			wxTreeCtrl* m_treeCtrl1;
 		
 		protected:
+			enum
+			{
+				ID_EXIT = 1000,
+			};
+			
 			wxSplitterWindow* m_splitter1;
 			wxPanel* m_panel1;
 			wxPanel* m_panel2;
@@ -73,8 +81,10 @@ namespace ui
 			wxPanel* m_panel4;
 			wxListCtrl* m_listCtrl1;
 			wxMenuBar* m_menubar1;
+			wxMenu* file;
 			wxStatusBar* m_statusBar1;
 			wxToolBar* m_toolBar1;
+			wxComboBox* m_comboBox1;
 		
 		public:
 			
@@ -103,13 +113,19 @@ namespace ui
 		private:
 		
 		protected:
+			wxListbook* m_listbook1;
+			wxPanel* m_panel5;
+			wxPanel* m_panel6;
+			wxPanel* m_panel7;
+			wxAuiNotebook* m_auinotebook1;
+			wxPanel* m_panel4;
 			wxStatusBar* m_statusBar1;
 			wxMenuBar* m_mainMenu;
 			wxMenu* m_menuFile;
 		
 		public:
 			
-			MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+			MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,600 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 			~MainFrame();
 		
 	};

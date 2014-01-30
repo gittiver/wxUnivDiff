@@ -1,11 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Sep 12 2010)
+// C++ code generated with wxFormBuilder (version Sep  8 2010)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
 #include "ui.h"
+
+#include "bitmaps/tooldata.xpm"
 
 // Using the construction of a static object to ensure that the help provider is set
 class wxFBContextSensitiveHelpSetter
@@ -28,7 +30,7 @@ AboutDialog::AboutDialog( wxWindow* parent, wxWindowID id, const wxString& title
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
 	
-	m_staticText4 = new wxStaticText( this, wxID_ANY, _("Visual-Litesql"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
+	m_staticText4 = new wxStaticText( this, wxID_ANY, _("wxUnivDiff"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
 	m_staticText4->Wrap( -1 );
 	bSizer4->Add( m_staticText4, 1, wxALL|wxEXPAND, 5 );
 	
@@ -104,15 +106,20 @@ MainFrame2::MainFrame2( wxWindow* parent, wxWindowID id, const wxString& title, 
 	this->SetSizer( bSizer9 );
 	this->Layout();
 	m_menubar1 = new wxMenuBar( 0 );
+	file = new wxMenu();
+	wxMenuItem* exit;
+	exit = new wxMenuItem( file, ID_EXIT, wxString( _("Exit") ) + wxT('\t') + wxT("Alt+F4"), wxEmptyString, wxITEM_NORMAL );
+	file->Append( exit );
+	
+	m_menubar1->Append( file, _("File") ); 
+	
 	this->SetMenuBar( m_menubar1 );
 	
 	m_statusBar1 = this->CreateStatusBar( 1, wxST_SIZEGRIP, wxID_ANY );
 	m_toolBar1 = this->CreateToolBar( wxTB_HORIZONTAL, wxID_ANY ); 
-	m_toolBar1->AddTool( wxID_ANY, _("tool"), wxNullBitmap, wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString ); 
 	m_toolBar1->AddSeparator(); 
-	m_toolBar1->AddTool( wxID_ANY, _("tool"), wxNullBitmap, wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString ); 
-	m_toolBar1->AddTool( wxID_ANY, _("tool"), wxNullBitmap, wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString ); 
-	m_toolBar1->AddTool( wxID_ANY, _("tool"), wxNullBitmap, wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString ); 
+	m_comboBox1 = new wxComboBox( m_toolBar1, wxID_ANY, _("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	m_toolBar1->AddControl( m_comboBox1 );
 	m_toolBar1->Realize();
 	
 	
@@ -129,6 +136,30 @@ MainFrame::MainFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxVERTICAL );
+	
+	m_listbook1 = new wxListbook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLB_DEFAULT );
+	m_panel5 = new wxPanel( m_listbook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_listbook1->AddPage( m_panel5, _("a page"), false );
+	m_panel6 = new wxPanel( m_listbook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_listbook1->AddPage( m_panel6, _("a page"), false );
+	m_panel7 = new wxPanel( m_listbook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_listbook1->AddPage( m_panel7, _("a page"), true );
+	#ifndef __WXGTK__ // Small icon style not supported in GTK
+	wxListView* m_listbook1ListView = m_listbook1->GetListView();
+	long m_listbook1Flags = m_listbook1ListView->GetWindowStyleFlag();
+	m_listbook1Flags = ( m_listbook1Flags & ~wxLC_ICON ) | wxLC_SMALL_ICON;
+	m_listbook1ListView->SetWindowStyleFlag( m_listbook1Flags );
+	#endif
+	
+	bSizer6->Add( m_listbook1, 1, wxEXPAND | wxALL, 5 );
+	
+	m_auinotebook1 = new wxAuiNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE );
+	m_auinotebook1->SetHelpText( _("bla help blah") );
+	
+	m_panel4 = new wxPanel( m_auinotebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_auinotebook1->AddPage( m_panel4, _("units"), false, wxBitmap( tooldata_xpm ) );
+	
+	bSizer6->Add( m_auinotebook1, 1, wxALL|wxEXPAND, 5 );
 	
 	this->SetSizer( bSizer6 );
 	this->Layout();

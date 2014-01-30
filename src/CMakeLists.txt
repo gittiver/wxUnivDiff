@@ -12,7 +12,7 @@ include(${CMAKE_ROOT}/Modules/UsewxWidgets.cmake)
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
 
 # We need the Find package for wxWidgets to work
-find_package(wxWidgets REQUIRED base core adv)
+find_package(wxWidgets REQUIRED base core adv aui)
 
 ##---------------------------------------------------
 ## Actual config file starts here
