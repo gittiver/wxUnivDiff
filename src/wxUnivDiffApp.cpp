@@ -112,12 +112,19 @@ bool wxUnivDiffApp::OnInit(void)
 //  };
   // Create the main frame window
   //MyFrame *frame = new MyFrame(wxT("wxListCtrl Test"));
-  MainFrame2 *frame = new MainFrame2(NULL,wxID_ANY,wxT("tesme"));
-  // Show the frame
-  frame->Show(true);
+  //MainFrame *frame = new MainFrame(NULL,wxID_ANY,wxT("tesme"));
+  //// Show the frame
+  //frame->Show(true);
+  class MimeTypeListController {
+  public:
+     MimeTypeListController (MimetypeListFrame*
+  };
   
-  return true;
-/*
+  MimeTypeListController c;
+  MimetypeListFrame* mimetypeListFrame = new MimetypeListFrame(NULL,wxID_ANY,wxT("Verknüpfte Anwendungen"));
+  return mimetypeListFrame->Show(true);
+
+  /*
    // start transaction
   //// Give it an icon (this is ignored in MDI mode: uses resources)
 #ifdef __WXMSW__

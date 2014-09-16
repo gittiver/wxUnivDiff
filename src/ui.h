@@ -20,21 +20,9 @@
 #include <wx/button.h>
 #include <wx/sizer.h>
 #include <wx/dialog.h>
-#include <wx/treectrl.h>
-#include <wx/panel.h>
-#include <wx/notebook.h>
 #include <wx/listctrl.h>
-#include <wx/splitter.h>
-#include <wx/bitmap.h>
-#include <wx/image.h>
-#include <wx/icon.h>
-#include <wx/menu.h>
-#include <wx/statusbr.h>
-#include <wx/combobox.h>
-#include <wx/toolbar.h>
+#include <wx/panel.h>
 #include <wx/frame.h>
-#include <wx/listbook.h>
-#include <wx/aui/auibook.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -60,73 +48,26 @@ namespace ui
 	};
 	
 	///////////////////////////////////////////////////////////////////////////////
-	/// Class MainFrame2
+	/// Class MimetypeListFrame
 	///////////////////////////////////////////////////////////////////////////////
-	class MainFrame2 : public wxFrame 
-	{
-		private:
-			wxTreeCtrl* m_treeCtrl1;
-		
-		protected:
-			enum
-			{
-				ID_EXIT = 1000,
-			};
-			
-			wxSplitterWindow* m_splitter1;
-			wxPanel* m_panel1;
-			wxPanel* m_panel2;
-			wxNotebook* m_notebook1;
-			wxSplitterWindow* m_splitter3;
-			wxPanel* m_panel4;
-			wxListCtrl* m_listCtrl1;
-			wxMenuBar* m_menubar1;
-			wxMenu* file;
-			wxStatusBar* m_statusBar1;
-			wxToolBar* m_toolBar1;
-			wxComboBox* m_comboBox1;
-		
-		public:
-			
-			MainFrame2( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,600 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
-			~MainFrame2();
-			
-			void m_splitter1OnIdle( wxIdleEvent& )
-			{
-				m_splitter1->SetSashPosition( 0 );
-				m_splitter1->Disconnect( wxEVT_IDLE, wxIdleEventHandler( MainFrame2::m_splitter1OnIdle ), NULL, this );
-			}
-			
-			void m_splitter3OnIdle( wxIdleEvent& )
-			{
-				m_splitter3->SetSashPosition( 0 );
-				m_splitter3->Disconnect( wxEVT_IDLE, wxIdleEventHandler( MainFrame2::m_splitter3OnIdle ), NULL, this );
-			}
-		
-	};
-	
-	///////////////////////////////////////////////////////////////////////////////
-	/// Class MainFrame
-	///////////////////////////////////////////////////////////////////////////////
-	class MainFrame : public wxFrame 
+	class MimetypeListFrame : public wxFrame 
 	{
 		private:
 		
 		protected:
-			wxListbook* m_listbook1;
 			wxPanel* m_panel5;
-			wxPanel* m_panel6;
-			wxPanel* m_panel7;
-			wxAuiNotebook* m_auinotebook1;
-			wxPanel* m_panel4;
-			wxStatusBar* m_statusBar1;
-			wxMenuBar* m_mainMenu;
-			wxMenu* m_menuFile;
+			wxListCtrl* m_listCtrlMimetypes;
+			wxStdDialogButtonSizer* m_sdbSizer1;
+			wxButton* m_sdbSizer1OK;
+			wxButton* m_sdbSizer1Apply;
+			wxButton* m_sdbSizer1Cancel;
+			wxButton* m_sdbSizer1Help;
+			
 		
 		public:
 			
-			MainFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,600 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
-			~MainFrame();
+			MimetypeListFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 865,497 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+			~MimetypeListFrame();
 		
 	};
 	
