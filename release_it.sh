@@ -2,21 +2,33 @@
 
 HOST_SYSTEM=`uname -s`
 HOST_ARCH=`uname -m`
-
-AM_BUILDDIR=build/autotools/$HOST_ARCH-$HOST_SYSTEM
-CMAKE_BUILDDIR=build/cmake/$HOST_ARCH-$HOST_SYSTEM
 STARTDIR=`pwd`
+
+CMAKE_BUILDDIR=build/$HOST_ARCH-$HOST_SYSTEM
+WXDIR=$STARTDIR/../wxWidgets/3.0.0
 
 mkdir -p $CMAKE_BUILDDIR
 
 cd $CMAKE_BUILDDIR
-#rm CMakeCache.txt
-cmake -D WITH_DOCS:bool=ON -D wxUnivDiff_WITH_TESTS:bool=ON $STARTDIR
-cmake --build --target all --target test --target package --target package_source
+
+cmake -DwxUnivDiff_WITH_DOCS:bool=ON \
+	  -DwxUnivDiff_WITH_TESTS:bool=ON \
+      -DCXXTEST_INCLUDE_DIR=3rdparty/cxxtest \
+      -DCXXTEST_PYTHON_TESTGEN_EXECUTABLE=3rdparty/cxxtest/bin/cxxtestgen \
+      -DwxWidgets_CONFIG_EXECUTABLE:FILEPATH=$WXDIR/build-cocoa-debug/wx-config \
+      ../..
+
+cmake --build . --target all --target test --target package 
+cmake --build . --target package_source
 cd $STARTDIR
 
-#mkdir -p $AM_BUILDDIR
-#cd $AM_BUILDDIR
-#$STARTDIR/configure 
-#make distcheck
-#cd $STARTDIR
+mkdir -p build/Xcode
+cd build/Xcode
+cmake -DwxUnivDiff_WITH_DOCS:bool=ON \
+	  -DwxUnivDiff_WITH_TESTS:bool=ON \
+      -DCXXTEST_INCLUDE_DIR=3rdparty/cxxtest \
+      -DCXXTEST_PYTHON_TESTGEN_EXECUTABLE=3rdparty/cxxtest/bin/cxxtestgen \
+      -DwxWidgets_CONFIG_EXECUTABLE:FILEPATH=$WXDIR/build-cocoa-debug/wx-config \
+      -G Xcode ../..
+cd $STARTDIR
+
