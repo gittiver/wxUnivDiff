@@ -1,8 +1,6 @@
 project(wxUnivDiff)
 cmake_minimum_required(VERSION 2.8)
 
-SET(CMAKE_MAKE_PROGRAM C:/Users/frank.landgraf.ext/Projects/mks/SNRDemo/BuildEnvironment/bin/make.exe)
-
 set(PROJECT_NAME "wxUnivDiff")
 
 set(PROJECT_VERSION_MAJOR 0)
