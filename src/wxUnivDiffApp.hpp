@@ -2,6 +2,7 @@
 #define wxUnivDiffApp_hpp
 
 #include <wx/app.h>
+#include <wx/config.h>
 
 class wxUnivDiffApp : public wxApp
 {

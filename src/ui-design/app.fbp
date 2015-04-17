@@ -269,7 +269,7 @@
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
             <property name="minimum_size"></property>
-            <property name="name">MimetypeListFrame</property>
+            <property name="name">MimetypeListFrameBase</property>
             <property name="pos"></property>
             <property name="size">865,497</property>
             <property name="style">wxDEFAULT_FRAME_STYLE</property>
@@ -390,10 +390,10 @@
                                     <property name="maximum_size"></property>
                                     <property name="minimum_size"></property>
                                     <property name="name">m_listCtrlMimetypes</property>
-                                    <property name="permission">protected</property>
+                                    <property name="permission">public</property>
                                     <property name="pos"></property>
                                     <property name="size"></property>
-                                    <property name="style">wxLC_REPORT|wxLC_VIRTUAL</property>
+                                    <property name="style">wxLC_EDIT_LABELS|wxLC_REPORT</property>
                                     <property name="subclass"></property>
                                     <property name="tooltip"></property>
                                     <property name="validator_data_type"></property>
@@ -423,9 +423,9 @@
                                     <event name="OnListColEndDrag"></event>
                                     <event name="OnListColRightClick"></event>
                                     <event name="OnListDeleteAllItems"></event>
-                                    <event name="OnListDeleteItem"></event>
-                                    <event name="OnListEndLabelEdit"></event>
-                                    <event name="OnListInsertItem"></event>
+                                    <event name="OnListDeleteItem">OnDelete</event>
+                                    <event name="OnListEndLabelEdit">OnEndEdit</event>
+                                    <event name="OnListInsertItem">OnInsertItem</event>
                                     <event name="OnListItemActivated"></event>
                                     <event name="OnListItemDeselected"></event>
                                     <event name="OnListItemFocused"></event>
@@ -448,11 +448,11 @@
                                     <event name="OnUpdateUI"></event>
                                 </object>
                             </object>
-                            <object class="sizeritem" expanded="1">
+                            <object class="sizeritem" expanded="0">
                                 <property name="border">12</property>
                                 <property name="flag">wxEXPAND|wxRIGHT|wxLEFT</property>
                                 <property name="proportion">0</property>
-                                <object class="wxBoxSizer" expanded="1">
+                                <object class="wxBoxSizer" expanded="0">
                                     <property name="minimum_size"></property>
                                     <property name="name">hButtonBoxSizer</property>
                                     <property name="orient">wxHORIZONTAL</property>
@@ -473,21 +473,21 @@
                                             <property name="minimum_size"></property>
                                             <property name="name">m_sdbSizer1</property>
                                             <property name="permission">protected</property>
-                                            <event name="OnApplyButtonClick"></event>
-                                            <event name="OnCancelButtonClick"></event>
+                                            <event name="OnApplyButtonClick">OnApply</event>
+                                            <event name="OnCancelButtonClick">OnCancel</event>
                                             <event name="OnContextHelpButtonClick"></event>
-                                            <event name="OnHelpButtonClick"></event>
+                                            <event name="OnHelpButtonClick">OnHelp</event>
                                             <event name="OnNoButtonClick"></event>
-                                            <event name="OnOKButtonClick"></event>
+                                            <event name="OnOKButtonClick">OnOk</event>
                                             <event name="OnSaveButtonClick"></event>
                                             <event name="OnYesButtonClick"></event>
                                         </object>
                                     </object>
-                                    <object class="sizeritem" expanded="1">
+                                    <object class="sizeritem" expanded="0">
                                         <property name="border">5</property>
                                         <property name="flag">wxEXPAND</property>
                                         <property name="proportion">0</property>
-                                        <object class="spacer" expanded="1">
+                                        <object class="spacer" expanded="0">
                                             <property name="height">0</property>
                                             <property name="permission">protected</property>
                                             <property name="width">0</property>
