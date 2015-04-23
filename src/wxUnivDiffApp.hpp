@@ -20,6 +20,10 @@ public:
 
 protected:
 	bool OnInit(void);
+private:
+  bool RunInteractive();
+  bool RunCmdMode();
+
 };
 
 DECLARE_APP(wxUnivDiffApp)

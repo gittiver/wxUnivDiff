@@ -41,17 +41,13 @@ static const wxCmdLineEntryDesc cmdLineDesc[] =
 
 enum {
   INTERACTIVE,
-  LIST,
-  ADD,
-  DEL,
-  EDIT,
   DIFF
 } mode;
 
-bool verbose;
-bool list;
-bool add;
-bool del;
+bool verbose = false;
+bool list    = false;
+bool add     = false;
+bool del     = false;
 
 void wxUnivDiffApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
@@ -62,16 +58,16 @@ bool wxUnivDiffApp::OnCmdLineParsed	(	wxCmdLineParser & 	parser	)
 {
   verbose = parser.FoundSwitch("v")==wxCMD_SWITCH_ON;
   
-  if (parser.FoundSwitch("i")==wxCMD_SWITCH_ON)
-  {
-    mode = INTERACTIVE;
-  }
-  
   list = parser.FoundSwitch("l")==wxCMD_SWITCH_ON;
   add  = parser.FoundSwitch("a")==wxCMD_SWITCH_ON;
   del  = parser.FoundSwitch("del")==wxCMD_SWITCH_ON;
   
   
+  if (parser.FoundSwitch("i")==wxCMD_SWITCH_ON)
+  {
+    mode = INTERACTIVE;
+  }
+
   size_t c = parser.GetParamCount();
   if (c>1)
   {
@@ -96,9 +92,10 @@ Pp p;
 
 using namespace ui;
 
-bool wxUnivDiffApp::OnInit(void)
+wxStringToStringHashMap extensions;
+
+void LoadExtensions()
 {
-  wxStringToStringHashMap extensions;
   wxConfigBase* config= wxConfig::Get();
 
   if (!config->HasGroup(_("extensions")) )
@@ -122,24 +119,22 @@ bool wxUnivDiffApp::OnInit(void)
       cont = config->GetNextEntry(str,lIndex);
     } while(cont);
   }
+}
 
-  ::wxInitAllImageHandlers();
-
-  if ( !wxApp::OnInit() )
-    return false;
-  
-//  wxArrayString r;
-//  // long result = wxShell("echo abc; exit", r);
-//  p.Redirect();
-//  long  result =  wxExecute("date",wxEXEC_ASYNC,&p);
-//  wxInputStream* in = p.GetInputStream();
-//  
-//  wxChar buf[1024];
-//  while(in->CanRead())
-//  {
-//    in->ReadAll(buf,sizeof(buf));
-//    wxLogDebug(buf);
-//  };
+bool wxUnivDiffApp::RunInteractive()
+{
+  //  wxArrayString r;
+  //  // long result = wxShell("echo abc; exit", r);
+  //  p.Redirect();
+  //  long  result =  wxExecute("date",wxEXEC_ASYNC,&p);
+  //  wxInputStream* in = p.GetInputStream();
+  //
+  //  wxChar buf[1024];
+  //  while(in->CanRead())
+  //  {
+  //    in->ReadAll(buf,sizeof(buf));
+  //    wxLogDebug(buf);
+  //  };
   // Create the main frame window
   //MyFrame *frame = new MyFrame(wxT("wxListCtrl Test"));
   //MainFrame *frame = new MainFrame(NULL,wxID_ANY,wxT("tesme"));
@@ -155,40 +150,11 @@ bool wxUnivDiffApp::OnInit(void)
     void OnOk( wxCommandEvent& event )     { Close(); }
     void OnHelp( wxCommandEvent& event )   { wxMessageBox(_T("Help")); }
   };
-  
+
   MimetypeListFrameBase* mimetypeListFrame = new MimeTypeListFrame;
 
   mimetypeListFrame->m_listCtrlMimetypes->InsertColumn(1,"Extensions");
   mimetypeListFrame->m_listCtrlMimetypes->InsertColumn(2,"Aufruf");
-
-  // TODO this could be a simpler list interface
-  class ListCtrlModel {
-  public:
-
-    class Observer {
-      public:
-      virtual void itemTextChanged(size_t row,size_t col,const wxString& text) = 0;
-      virtual void itemAdded(size_t row) = 0;
-      virtual void itemRemoved(size_t row) = 0;
-      //      typedef wxList<Observer*> List;
-    };
-
-    virtual ~ListCtrlModel(){};
-
-    std::list<Observer*> observers;
-
-
-    void AddObserver(Observer* observer);
-    void RemoveObserver(Observer* observer);
-
-    virtual size_t size() const = 0;
-    virtual size_t getColumnCount() const = 0;
-    virtual void getColumnText(size_t col,wxString& text) const = 0;
-
-    virtual void getText(size_t row,size_t col,wxString& text) = 0;
-    virtual void setText(size_t row,size_t col,const wxString& text) = 0;
-
-  };
 
   long index=0;
   wxListItem item;
@@ -212,25 +178,48 @@ bool wxUnivDiffApp::OnInit(void)
 
   /*
    // start transaction
-  //// Give it an icon (this is ignored in MDI mode: uses resources)
-#ifdef __WXMSW__
-  pMainframe->SetIcon(wxIcon(_T("doc")));
-#endif
-#ifdef __X__
-  pMainframe->SetIcon(wxIcon(_T("doc.xbm")));
-#endif
+   //// Give it an icon (this is ignored in MDI mode: uses resources)
+   #ifdef __WXMSW__
+   pMainframe->SetIcon(wxIcon(_T("doc")));
+   #endif
+   #ifdef __X__
+   pMainframe->SetIcon(wxIcon(_T("doc.xbm")));
+   #endif
 
-#ifdef __WXMAC__
-  wxMenuBar::MacSetCommonMenuBar(pMainframe->GetMenuBar());
-#endif //def __WXMAC__
-  
-  pMainframe->Centre(wxBOTH);
+   #ifdef __WXMAC__
+   wxMenuBar::MacSetCommonMenuBar(pMainframe->GetMenuBar());
+   #endif //def __WXMAC__
 
-  SetTopWindow(pMainframe);
-#ifndef __WXMAC__
-  pMainframe->Show(true);
-#endif //ndef __WXMAC__
+   pMainframe->Centre(wxBOTH);
+
+   SetTopWindow(pMainframe);
+   #ifndef __WXMAC__
+   pMainframe->Show(true);
+   #endif //ndef __WXMAC__
    return true;
-*/
+   */
+}
+
+bool wxUnivDiffApp::RunCmdMode()
+{
+  return false;
+}
+
+bool wxUnivDiffApp::OnInit(void)
+{
+  ::wxInitAllImageHandlers();
+
+  if ( !wxApp::OnInit() )
+    return false;
+
+  LoadExtensions();
+
+  switch(mode)
+  {
+    case DIFF:      return RunCmdMode();
+    case INTERACTIVE:
+    default:
+      return RunInteractive();
+  }
 }
 
