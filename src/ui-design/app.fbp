@@ -426,7 +426,7 @@
                                     <event name="OnListDeleteItem">OnDelete</event>
                                     <event name="OnListEndLabelEdit">OnEndEdit</event>
                                     <event name="OnListInsertItem">OnInsertItem</event>
-                                    <event name="OnListItemActivated"></event>
+                                    <event name="OnListItemActivated">OnListItemActivated</event>
                                     <event name="OnListItemDeselected"></event>
                                     <event name="OnListItemFocused"></event>
                                     <event name="OnListItemMiddleClick"></event>

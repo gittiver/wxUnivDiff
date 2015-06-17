@@ -149,6 +149,9 @@ bool wxUnivDiffApp::RunInteractive()
     void OnCancel( wxCommandEvent& event ) { Close(); }
     void OnOk( wxCommandEvent& event )     { Close(); }
     void OnHelp( wxCommandEvent& event )   { wxMessageBox(_T("Help")); }
+	
+	void OnListItemActivated( wxListEvent& event ) { wxMessageBox(_T("OnItemActivated")); }
+			
   };
 
   MimetypeListFrameBase* mimetypeListFrame = new MimeTypeListFrame;
