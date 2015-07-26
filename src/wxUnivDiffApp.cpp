@@ -58,7 +58,10 @@ void wxUnivDiffApp::OnInitCmdLine(wxCmdLineParser& parser)
 
 bool isCmdLineSwitch(const wxString& param)
 {
-  for (size_t option_index=0; option_index< sizeof(cmdLineDesc[0])/sizeof(cmdLineDesc); ++option_index) {
+  for (size_t option_index=0;
+              option_index < sizeof(cmdLineDesc)/sizeof(cmdLineDesc[0]);
+              ++option_index)
+  {
     if ( param.substr(1).StartsWith(cmdLineDesc[option_index].shortName ) ) {
       return true;
     }
