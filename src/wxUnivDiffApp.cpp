@@ -90,8 +90,10 @@ bool wxUnivDiffApp::OnCmdLineParsed	(	wxCmdLineParser & 	parser	)
   return true;
 }
 
-wxStringToStringHashMap extensions;
+using namespace ui;
 
+wxStringToStringHashMap extensions;
+const char* const DEFAULT = "extensions/default";
 void LoadExtensions()
 {
   wxConfigBase* config= wxConfig::Get();
@@ -99,6 +101,14 @@ void LoadExtensions()
   if (!config->HasGroup(_("extensions")) ) {
     config->Write("extensions/txt","self");
     config->Write("extensions/bin","selfbin");
+#ifdef __APPLE__
+    config->Write(DEFAULT,"/usr/bin/diffmerge.sh");
+#elif defined( WIN32 )
+    config->Write(DEFAULT, "C:\\Tools\\WinMerge\\WinMergeU.exe");
+#else
+    // TODO write default application config for other systems
+#endif // #ifdef __APPLE__
+
     config->Flush();
   } else {
 
@@ -189,15 +199,6 @@ bool wxUnivDiffApp::RunInteractive()
   return mimetypeListFrame->Show(true);
 
   /*
-   // start transaction
-   //// Give it an icon (this is ignored in MDI mode: uses resources)
-   #ifdef __WXMSW__
-   pMainframe->SetIcon(wxIcon(_T("doc")));
-   #endif
-   #ifdef __X__
-   pMainframe->SetIcon(wxIcon(_T("doc.xbm")));
-   #endif
-
    #ifdef __WXMAC__
    wxMenuBar::MacSetCommonMenuBar(pMainframe->GetMenuBar());
    #endif //def __WXMAC__
@@ -212,20 +213,34 @@ bool wxUnivDiffApp::RunInteractive()
    */
 }
 
+
+wxProcess* pRunProcess;
 int wxUnivDiffApp::RunCmdMode()
 {
-  static wxProcess runProc;
-  wxString cmd = "C:\\Tools\\WinMerge\\WinMergeU.exe";
-  for (list<wxString>::const_iterator
-       param = parameters.begin();
-       param != parameters.end();
-       ++param) {
-    cmd.append(" ");
-    cmd.append(*param);
+  wxStringToStringHashMap::const_iterator defaultCmd = extensions.find("default");
+  if (defaultCmd == extensions.end())
+  {
+    //TODO error handling
+  }
+  else
+  {
+    wxString cmd(defaultCmd->second);
+
+    // append parameters from commandline
+    for (list<wxString>::const_iterator
+         param = parameters.begin();
+         param != parameters.end();
+         ++param)
+    {
+      cmd.append(" ");
+      cmd.append(*param);
+    }
+
+    // and run it ...
+    pRunProcess = wxProcess::Open(cmd);
   }
 
-  wxExecute(cmd,wxEXEC_ASYNC,&runProc);
-  return 0;
+  return pRunProcess ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 bool wxUnivDiffApp::OnInit(void)
