@@ -5,7 +5,7 @@ HOST_ARCH=`uname -m`
 STARTDIR=`pwd`
 
 CMAKE_BUILDDIR=build/$HOST_ARCH-$HOST_SYSTEM
-WXDIR=$STARTDIR/../wxWidgets/3.0.0
+WXDIR=$STARTDIR/../wxWidgets/3.0.2
 
 mkdir -p $CMAKE_BUILDDIR
 

@@ -1,9 +1,9 @@
 
-set PATH=%PATH%;C:\Program Files (x86)\CMake 2.8\bin
+set PATH=%PATH%;C:\Tools\CMake\bin
 
 set CMAKE_BUILDDIR=build\vc
 set STARTDIR=%CD%
-set WXDIR=%STARTDIR%\..\wxWidgets\2.9.5
+set WXDIR=%STARTDIR%\..\wxWidgets\3.0.2
 
 
 @if NOT "%VS100COMNTOOLS%"=="" (call "%VS100COMNTOOLS%\vsvars32.bat" & goto VS_END)
