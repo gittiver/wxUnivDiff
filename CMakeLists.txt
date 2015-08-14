@@ -1,12 +1,17 @@
-project(wxUnivDiff)
+set(VERSION_MAJOR 0)
+set(VERSION_MINOR 0)
+set(VERSION_PATCH 1)
+set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH} )
+
+project(wxUnivDiff,${VERSION})
 cmake_minimum_required(VERSION 2.8)
 
 set(PROJECT_NAME "wxUnivDiff")
 
-set(PROJECT_VERSION_MAJOR 0)
-set(PROJECT_VERSION_MINOR 0)
-set(PROJECT_VERSION_PATCH 1)
-set(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH} )
+if(POLICY CMP0043)
+  cmake_policy(SET CMP0043 OLD)
+endif()
+
 
 include (${CMAKE_ROOT}/Modules/FindCxxTest.cmake)
 
