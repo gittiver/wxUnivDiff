@@ -150,24 +150,24 @@ bool wxUnivDiffApp::RunInteractive()
     MimeTypeListFrame()
       : MimetypeListFrameBase(NULL,wxID_ANY,wxT("Verknuepfte Anwendungen")) {}
 
-    void OnApply( wxCommandEvent& event )
+    void OnApply( wxCommandEvent& /*event*/ )
     {
       wxMessageBox(_T("Apply"));
     }
-    void OnCancel( wxCommandEvent& event )
+    void OnCancel( wxCommandEvent& /*event */)
     {
       Close();
     }
-    void OnOk( wxCommandEvent& event )
+    void OnOk( wxCommandEvent& /*event*/ )
     {
       Close();
     }
-    void OnHelp( wxCommandEvent& event )
+    void OnHelp( wxCommandEvent& /*event*/ )
     {
       wxMessageBox(_T("Help"));
     }
 
-    void OnListItemActivated( wxListEvent& event )
+    void OnListItemActivated( wxListEvent& /*event*/ )
     {
       wxMessageBox(_T("OnItemActivated"));
     }
