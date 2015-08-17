@@ -46,6 +46,7 @@ if(wxWidgets_FOUND)
                    ${PROGRAM_wxUnivDiff_SOURCES})
 
     #ui-access
+    message(wxWidgets_LIBRARIES=${wxWidgets_LIBRARIES})
     target_link_libraries(${PROGRAM_wxUnivDiff} ${wxWidgets_LIBRARIES})
 
     if (MSVC)
