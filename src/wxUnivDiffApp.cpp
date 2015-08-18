@@ -34,7 +34,7 @@ static const wxCmdLineEntryDesc cmdLineDesc[] = {
 
 IMPLEMENT_APP(wxUnivDiffApp)
 
-wxUnivDiffApp::wxUnivDiffApp(void)
+  wxUnivDiffApp::wxUnivDiffApp(void)
 {}
 
 wxUnivDiffApp::~wxUnivDiffApp(void)
@@ -59,8 +59,8 @@ void wxUnivDiffApp::OnInitCmdLine(wxCmdLineParser& parser)
 bool isCmdLineSwitch(const wxString& param)
 {
   for (size_t option_index=0;
-              option_index < sizeof(cmdLineDesc)/sizeof(cmdLineDesc[0]);
-              ++option_index)
+    option_index < sizeof(cmdLineDesc)/sizeof(cmdLineDesc[0]);
+    ++option_index)
   {
     if ( param.substr(1).StartsWith(cmdLineDesc[option_index].shortName ) ) {
       return true;
@@ -94,11 +94,40 @@ using namespace ui;
 
 wxStringToStringHashMap extensions;
 const char* const DEFAULT = "extensions/default";
+
+void setExtension(const wxString& key,const wxString& value)
+{
+  extensions[key] = value;
+
+  //wxConfigBase* config= wxConfig::Get();
+  //config->SetPath("/extensions");
+  //config->Write(key,value);
+  //config->Flush();
+
+}
+
+void WriteExtensions()
+{
+  wxConfigBase* config= wxConfig::Get();
+  config->SetPath("/extensions");
+  for( wxStringToStringHashMap::const_iterator 
+    it = extensions.begin();
+    it != extensions.end();
+  ++it
+    )
+  {
+    config->Write(it->first,it->second);
+  }
+  // TODO we have to delete entries not in extension list
+}
+
+
 void LoadExtensions()
 {
   wxConfigBase* config= wxConfig::Get();
 
-  if (!config->HasGroup(_("extensions")) ) {
+  if (!config->HasGroup(_("extensions")) ) 
+  {
     config->Write("extensions/txt","self");
     config->Write("extensions/bin","selfbin");
 #ifdef __APPLE__
@@ -110,19 +139,20 @@ void LoadExtensions()
 #endif // #ifdef __APPLE__
 
     config->Flush();
-  } else {
+  } 
 
-    wxString str;
-    long lIndex;
-    wxString value;
-    config->SetPath("/extensions");
-    bool cont = config->GetFirstEntry(str, lIndex);
-    do {
-      config->Read(str,&value);
-      extensions[str] = value;
-      cont = config->GetNextEntry(str,lIndex);
-    } while(cont);
-  }
+  // TODO in any case there should be a default entry
+
+  wxString str;
+  long lIndex;
+  wxString value;
+  config->SetPath("/extensions");
+  bool cont = config->GetFirstEntry(str, lIndex);
+  do {
+    config->Read(str,&value);
+    extensions[str] = value;
+    cont = config->GetNextEntry(str,lIndex);
+  } while(cont);
 }
 
 bool wxUnivDiffApp::RunInteractive()
@@ -152,7 +182,7 @@ bool wxUnivDiffApp::RunInteractive()
 
     void OnApply( wxCommandEvent& /*event*/ )
     {
-      wxMessageBox(_T("Apply"));
+      WriteExtensions();
     }
     void OnCancel( wxCommandEvent& /*event */)
     {
@@ -160,6 +190,7 @@ bool wxUnivDiffApp::RunInteractive()
     }
     void OnOk( wxCommandEvent& /*event*/ )
     {
+      WriteExtensions();
       Close();
     }
     void OnHelp( wxCommandEvent& /*event*/ )
@@ -167,9 +198,28 @@ bool wxUnivDiffApp::RunInteractive()
       wxMessageBox(_T("Help"));
     }
 
-    void OnListItemActivated( wxListEvent& /*event*/ )
+    void OnListItemActivated( wxListEvent& event )
     {
-      wxMessageBox(_T("OnItemActivated"));
+      wxString key;
+      wxFileName fname;
+      int index = event.GetIndex();
+
+      EditEntryDialog dlg(this);
+
+      dlg.m_textCtrlExtension->SetValue(this->m_listCtrlMimetypes->GetItemText(index,0));
+      fname = this->m_listCtrlMimetypes->GetItemText(index,1);
+      dlg.m_filePickerCommand->SetFileName(fname);
+
+      int result = dlg.ShowModal();
+      if (result==wxID_OK)
+      {
+        key = dlg.m_textCtrlExtension->GetValue();
+        fname = dlg.m_filePickerCommand->GetFileName(); 
+
+        this->m_listCtrlMimetypes->SetItem(index, 0,key );
+        this->m_listCtrlMimetypes->SetItem(index, 1,fname.GetFullPath() );
+        setExtension(key,fname.GetFullPath());
+      }
     }
 
   };
@@ -182,35 +232,35 @@ bool wxUnivDiffApp::RunInteractive()
   long index=0;
   wxListItem item;
   for (wxStringToStringHashMap::iterator it = extensions.begin();
-       it != extensions.end();
-       ++it) {
-    item.SetText(it->first);
-    item.SetColumn(0);
-    item.SetId(index);
-    index = mimetypeListFrame->m_listCtrlMimetypes->InsertItem( item );
+    it != extensions.end();
+    ++it) {
+      item.SetText(it->first);
+      item.SetColumn(0);
+      item.SetId(index);
+      index = mimetypeListFrame->m_listCtrlMimetypes->InsertItem( item );
 
-    item.SetId(index);
-    item.SetColumn(1);
-    item.SetText(it->second);
+      item.SetId(index);
+      item.SetColumn(1);
+      item.SetText(it->second);
 
-    mimetypeListFrame->m_listCtrlMimetypes->SetItem(index, 1,it->second );
+      mimetypeListFrame->m_listCtrlMimetypes->SetItem(index, 1,it->second );
   }
 
   return mimetypeListFrame->Show(true);
 
   /*
-   #ifdef __WXMAC__
-   wxMenuBar::MacSetCommonMenuBar(pMainframe->GetMenuBar());
-   #endif //def __WXMAC__
+  #ifdef __WXMAC__
+  wxMenuBar::MacSetCommonMenuBar(pMainframe->GetMenuBar());
+  #endif //def __WXMAC__
 
-   pMainframe->Centre(wxBOTH);
+  pMainframe->Centre(wxBOTH);
 
-   SetTopWindow(pMainframe);
-   #ifndef __WXMAC__
-   pMainframe->Show(true);
-   #endif //ndef __WXMAC__
-   return true;
-   */
+  SetTopWindow(pMainframe);
+  #ifndef __WXMAC__
+  pMainframe->Show(true);
+  #endif //ndef __WXMAC__
+  return true;
+  */
 }
 
 
@@ -228,9 +278,9 @@ int wxUnivDiffApp::RunCmdMode()
 
     // append parameters from commandline
     for (list<wxString>::const_iterator
-         param = parameters.begin();
-         param != parameters.end();
-         ++param)
+      param = parameters.begin();
+      param != parameters.end();
+    ++param)
     {
       cmd.append(" ");
       cmd.append(*param);
