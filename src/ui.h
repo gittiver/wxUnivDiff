@@ -23,9 +23,8 @@
 #include <wx/listctrl.h>
 #include <wx/panel.h>
 #include <wx/frame.h>
-#include <wx/textctrl.h>
 #include <wx/filepicker.h>
-#include <wx/gbsizer.h>
+#include <wx/textctrl.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -93,18 +92,18 @@ namespace ui
 		private:
 		
 		protected:
-			wxStaticText* m_staticText6;
-			wxTextCtrl* m_textCtrl3;
-			wxStaticText* m_staticText7;
-			wxFilePickerCtrl* m_filePicker1;
+			wxStaticText* m_staticTextCommand;
+			wxStaticText* m_staticTextExtension;
 			wxStdDialogButtonSizer* m_sdbSizer2;
 			wxButton* m_sdbSizer2OK;
 			wxButton* m_sdbSizer2Cancel;
 			wxButton* m_sdbSizer2Help;
 		
 		public:
+			wxFilePickerCtrl* m_filePickerCommand;
+			wxTextCtrl* m_textCtrlExtension;
 			
-			EditEntryDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Edit Entry"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 586,129 ), long style = wxDEFAULT_DIALOG_STYLE );
+			EditEntryDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Edit Entry"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 586,169 ), long style = wxDEFAULT_DIALOG_STYLE );
 			~EditEntryDialog();
 		
 	};

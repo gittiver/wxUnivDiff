@@ -123,29 +123,29 @@ EditEntryDialog::EditEntryDialog( wxWindow* parent, wxWindowID id, const wxStrin
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
 	
-	wxGridBagSizer* gbSizer1;
-	gbSizer1 = new wxGridBagSizer( 0, 0 );
-	gbSizer1->AddGrowableCol( 1 );
-	gbSizer1->SetFlexibleDirection( wxBOTH );
-	gbSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	wxFlexGridSizer* fgSizer1;
+	fgSizer1 = new wxFlexGridSizer( 2, 2, 0, 0 );
+	fgSizer1->AddGrowableCol( 1 );
+	fgSizer1->SetFlexibleDirection( wxVERTICAL );
+	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText6 = new wxStaticText( this, wxID_ANY, _("Extension"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText6->Wrap( -1 );
-	gbSizer1->Add( m_staticText6, wxGBPosition( 0, 0 ), wxGBSpan( 1, 1 ), wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_staticTextCommand = new wxStaticText( this, wxID_ANY, _("Command"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextCommand->Wrap( -1 );
+	fgSizer1->Add( m_staticTextCommand, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_textCtrl3 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer1->Add( m_textCtrl3, wxGBPosition( 0, 1 ), wxGBSpan( 1, 1 ), wxALL|wxEXPAND, 5 );
+	m_filePickerCommand = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, _("Select a file"), wxT("*.*"), wxDefaultPosition, wxSize( -1,-1 ), wxFLP_DEFAULT_STYLE|wxFLP_FILE_MUST_EXIST );
+	m_filePickerCommand->SetMaxSize( wxSize( 300,-1 ) );
 	
-	m_staticText7 = new wxStaticText( this, wxID_ANY, _("Command"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText7->Wrap( -1 );
-	gbSizer1->Add( m_staticText7, wxGBPosition( 1, 0 ), wxGBSpan( 1, 1 ), wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizer1->Add( m_filePickerCommand, 1, wxALL|wxEXPAND, 5 );
 	
-	m_filePicker1 = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, _("Select a file"), wxT("*.*"), wxDefaultPosition, wxSize( -1,-1 ), wxFLP_DEFAULT_STYLE );
-	m_filePicker1->SetMaxSize( wxSize( 300,-1 ) );
+	m_staticTextExtension = new wxStaticText( this, wxID_ANY, _("Extension"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextExtension->Wrap( -1 );
+	fgSizer1->Add( m_staticTextExtension, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	gbSizer1->Add( m_filePicker1, wxGBPosition( 1, 1 ), wxGBSpan( 1, 1 ), wxALL|wxEXPAND, 5 );
+	m_textCtrlExtension = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer1->Add( m_textCtrlExtension, 1, wxALL|wxEXPAND, 5 );
 	
-	bSizer5->Add( gbSizer1, 0, wxEXPAND, 5 );
+	bSizer5->Add( fgSizer1, 1, wxEXPAND, 5 );
 	
 	m_sdbSizer2 = new wxStdDialogButtonSizer();
 	m_sdbSizer2OK = new wxButton( this, wxID_OK );
