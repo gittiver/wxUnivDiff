@@ -11,26 +11,10 @@
 #include "wxUnivDiffApp.hpp"
 
 #include "ui.h"
+#include "cmdline.hpp"
 
 using namespace ui;
 using std::list;
-
-static const wxCmdLineEntryDesc cmdLineDesc[] = {
-  { wxCMD_LINE_SWITCH, "v", "verbose", "be verbose" },
-  //{ wxCMD_LINE_SWITCH, "q", "quiet",   "be quiet" },
-
-  // { wxCMD_LINE_OPTION, "o", "output",  "output file" },
-  { wxCMD_LINE_OPTION, "i", "interactive",   "interactive mode" },
-
-  { wxCMD_LINE_OPTION, "l", "list",   "list " },
-  { wxCMD_LINE_OPTION, "a", "add",   "add entry" },
-  { wxCMD_LINE_OPTION, "del", "del",   "del entry" },
-
-
-  { wxCMD_LINE_PARAM,  NULL, NULL, "input file", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_MULTIPLE| wxCMD_LINE_PARAM_OPTIONAL },
-
-  { wxCMD_LINE_NONE }
-};
 
 IMPLEMENT_APP(wxUnivDiffApp)
 
@@ -40,37 +24,16 @@ IMPLEMENT_APP(wxUnivDiffApp)
 wxUnivDiffApp::~wxUnivDiffApp(void)
 {}
 
-struct options_t {
-  bool verbose;
-  bool list;
-  bool add;
-  bool del;
-  bool interactive;
-  bool diff;
-} options = { false,false,false,false,false,false };
-
 list<wxString> parameters;
 
 void wxUnivDiffApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
-  parser.SetDesc(cmdLineDesc);
-}
-
-bool isCmdLineSwitch(const wxString& param)
-{
-  for (size_t option_index=0;
-    option_index < sizeof(cmdLineDesc)/sizeof(cmdLineDesc[0]);
-    ++option_index)
-  {
-    if ( param.substr(1).StartsWith(cmdLineDesc[option_index].shortName ) ) {
-      return true;
-    }
-  }
-  return false;
+  parser.SetDesc(getCmdlineEntryDesc());
 }
 
 bool wxUnivDiffApp::OnCmdLineParsed	(	wxCmdLineParser & 	parser	)
 {
+  options_t& options = getOptions(); 
   options.verbose = parser.FoundSwitch("v")==wxCMD_SWITCH_ON;
 
   options.list = parser.FoundSwitch("l")==wxCMD_SWITCH_ON;
@@ -221,7 +184,6 @@ bool wxUnivDiffApp::RunInteractive()
         setExtension(key,fname.GetFullPath());
       }
     }
-
   };
 
   MimetypeListFrameBase* mimetypeListFrame = new MimeTypeListFrame;
@@ -301,7 +263,7 @@ bool wxUnivDiffApp::OnInit(void)
     return false;
 
   LoadExtensions();
-  if (!options.diff)
+  if (!getOptions().diff)
     return RunInteractive();
   return true;
 }
@@ -309,7 +271,7 @@ bool wxUnivDiffApp::OnInit(void)
 int wxUnivDiffApp::OnRun(void)
 {
   // TODO check other flags
-  if (options.diff) {
+  if (getOptions().diff) {
     return RunCmdMode();
   } else {
     return wxApp::OnRun();

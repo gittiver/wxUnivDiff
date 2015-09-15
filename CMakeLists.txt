@@ -1,16 +1,19 @@
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 0)
-set(VERSION_PATCH 1)
-set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH} )
-
-project(wxUnivDiff,${VERSION})
 cmake_minimum_required(VERSION 2.8)
 
-set(PROJECT_NAME "wxUnivDiff")
+if(POLICY CMP0048)
+  cmake_policy(SET CMP0048 NEW)
+endif()
 
 if(POLICY CMP0043)
   cmake_policy(SET CMP0043 OLD)
 endif()
+
+set(PARAM_VERSION_MAJOR 0)
+set(PARAM_VERSION_MINOR 0)
+set(PARAM_VERSION_PATCH 2)
+set(PARAM_VERSION ${PARAM_VERSION_MAJOR}.${PARAM_VERSION_MINOR}.${PARAM_VERSION_PATCH} )
+
+project(wxUnivDiff VERSION ${PARAM_VERSION})
 
 
 include (${CMAKE_ROOT}/Modules/FindCxxTest.cmake)
@@ -53,6 +56,33 @@ else(MSVC)
   list(APPEND CMAKE_C_FLAGS "-Wall -Wunused-variable -Wno-long-long")
 endif(MSVC)
 
+include(${CMAKE_ROOT}/Modules/FindwxWidgets.cmake)
+include(${CMAKE_ROOT}/Modules/UsewxWidgets.cmake)
+
+# Here you can define what libraries of wxWidgets you need for your
+# application. You can figure out what libraries you need here;
+# http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
+
+# We need the Find package for wxWidgets to work
+find_package(wxWidgets REQUIRED core base)
+# adv aui)
+
+##---------------------------------------------------
+## Actual config file starts here
+##---------------------------------------------------
+
+# Did we find wxWidgets ? This condition will fail
+# for as long as the internal vars do not point to
+# the proper wxWidgets configuration
+if(wxWidgets_FOUND)
+    # Include wxWidgets macros
+    include(${wxWidgets_USE_FILE})
+    set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS ${wxWidgets_DEFINITIONS})
+else(wxWidgets_FOUND)
+    # For convenience. When we cannot continue, inform the user
+    MESSAGE("wxWidgets not found!")
+endif(wxWidgets_FOUND)
+
 # create config.h
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake 
         ${CMAKE_CURRENT_BINARY_DIR}/config.h)
@@ -93,7 +123,7 @@ endif(${PROJECT_NAME}_WITH_DOCS)
 if(${PROJECT_NAME}_WITH_TESTS) 
   if(CXXTEST_FOUND)
     enable_testing()
-#    add_subdirectory(test)
+    add_subdirectory(test)
   endif(CXXTEST_FOUND)
 endif(${PROJECT_NAME}_WITH_TESTS)
 
