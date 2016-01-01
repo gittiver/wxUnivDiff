@@ -5,7 +5,7 @@ set CMAKE_BUILDDIR=build\vc
 set STARTDIR=%CD%
 set WXDIR=%STARTDIR%\..\wxWidgets\3.0.2
 
-
+@if NOT "%VS140COMNTOOLS%"=="" (call "%VS140COMNTOOLS%\vsvars32.bat" & goto VS_END)
 @if NOT "%VS100COMNTOOLS%"=="" (call "%VS100COMNTOOLS%\vsvars32.bat" & goto VS_END)
 @if NOT "%VS90COMNTOOLS%"=="" (call "%VS90COMNTOOLS%\vsvars32.bat" & goto VS_END)
 @if NOT "%VS80COMNTOOLS%"=="" (call "%VS80COMNTOOLS%\vsvars32.bat" & goto VS_END)
