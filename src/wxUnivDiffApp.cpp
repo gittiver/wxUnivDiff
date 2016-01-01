@@ -7,6 +7,7 @@
 #include <wx/stream.h>
 #include <wx/msgdlg.h>
 #include <list>
+#include <set>
 
 #include "wxUnivDiffApp.hpp"
 
@@ -15,6 +16,7 @@
 
 using namespace ui;
 using std::list;
+using std::set;
 
 IMPLEMENT_APP(wxUnivDiffApp)
 
@@ -25,6 +27,23 @@ wxUnivDiffApp::~wxUnivDiffApp(void)
 {}
 
 list<wxString> parameters;
+
+set<wxString> getParameterFileExtensions()
+{
+  set<wxString> result;
+  for(list<wxString>::const_iterator param = parameters.begin();
+    param != parameters.end();
+    param++
+    )
+  {
+    wxFileName filename(*param);
+    if (filename.HasExt()) 
+    {
+      result.insert(filename.GetExt());
+    }
+  }
+  return result;
+}
 
 void wxUnivDiffApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
@@ -229,6 +248,8 @@ bool wxUnivDiffApp::RunInteractive()
 wxProcess* pRunProcess;
 int wxUnivDiffApp::RunCmdMode()
 {
+  set<wxString> extensions = getParameterFileExtensions();
+  set<wxString>::const_iterator 
   wxStringToStringHashMap::const_iterator defaultCmd = extensions.find("default");
   if (defaultCmd == extensions.end())
   {
