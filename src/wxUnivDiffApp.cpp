@@ -248,16 +248,33 @@ bool wxUnivDiffApp::RunInteractive()
 wxProcess* pRunProcess;
 int wxUnivDiffApp::RunCmdMode()
 {
-  set<wxString> extensions = getParameterFileExtensions();
-  set<wxString>::const_iterator 
-  wxStringToStringHashMap::const_iterator defaultCmd = extensions.find("default");
-  if (defaultCmd == extensions.end())
+  wxStringToStringHashMap::const_iterator cmd = extensions.end(); 
+  set<wxString> param_ext = getParameterFileExtensions();
+
+  for(set<wxString>::const_iterator it_ext = param_ext.begin(); 
+    it_ext != param_ext.end();
+    it_ext++)
+  {
+    cmd = extensions.find(*it_ext);
+    if (cmd!=extensions.end())
+    {
+      break;
+    }
+  }
+
+  /* if no command is found, search for default command */
+  if (cmd==extensions.end())
+  {
+    cmd = extensions.find("default");
+  }
+
+  if (cmd == extensions.end())
   {
     //TODO error handling
   }
   else
   {
-    wxString cmd(defaultCmd->second);
+    wxString cmd(cmd->second);
 
     // append parameters from commandline
     for (list<wxString>::const_iterator
