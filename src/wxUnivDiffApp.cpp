@@ -290,6 +290,7 @@ int wxUnivDiffApp::RunCmdMode()
     pRunProcess = wxProcess::Open(cmd);
   }
 
+  // TODO what should we do on EXIT_FAILURE ?
   return pRunProcess ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
