@@ -74,13 +74,15 @@ bool wxUnivDiffApp::OnCmdLineParsed	(	wxCmdLineParser & 	parser	)
 
 using namespace ui;
 
-wxStringToStringHashMap extensions;
-const char* const DEFAULT = "extensions/default";
+wxStringToStringHashMap extensions_executable_string;
+wxStringToStringHashMap extensions_parameters;
 
-void setExtension(const wxString& key,const wxString& value)
+const char* const DEFAULT = _("extensions/default");
+
+void setExtension(const wxString& key,const wxString& executable_string,const wxString& parameters=_(""))
 {
-  extensions[key] = value;
-
+  extensions_executable_string[key] = executable_string;
+  extensions_parameters[key] = parameters;
   //wxConfigBase* config= wxConfig::Get();
   //config->SetPath("/extensions");
   //config->Write(key,value);
@@ -91,14 +93,29 @@ void setExtension(const wxString& key,const wxString& value)
 void WriteExtensions()
 {
   wxConfigBase* config= wxConfig::Get();
+  wxString strOldPath;
+  wxStringToStringHashMap::const_iterator parameters_it;
+
   config->SetPath("/extensions");
   for( wxStringToStringHashMap::const_iterator 
-    it = extensions.begin();
-    it != extensions.end();
+    it = extensions_executable_string.begin();
+    it != extensions_executable_string.end();
   ++it
     )
   {
-    config->Write(it->first,it->second);
+    strOldPath = config->GetPath();
+    
+    config->Write(it->first,_("executable"));
+    config->SetPath(it->first);
+    config->Write(_("executable"),it->second);
+    
+    parameters_it = extensions_parameters.find(it->first);
+    if (parameters_it != extensions_parameters.end())
+    {
+      config->Write(_("parameters"),parameters_it->second);
+    }
+    
+    config->SetPath(strOldPath);
   }
   // TODO we have to delete entries not in extension list
 }
@@ -132,7 +149,15 @@ void LoadExtensions()
   bool cont = config->GetFirstEntry(str, lIndex);
   do {
     config->Read(str,&value);
-    extensions[str] = value;
+    if (!value.IsSameAs(_("executable")))
+    {
+      // old format: extension = executable
+      extensions_executable_string[str] = value;
+    }
+    else 
+    {
+      // TODO read new format
+    }
     cont = config->GetNextEntry(str,lIndex);
   } while(cont);
 }
@@ -207,13 +232,14 @@ bool wxUnivDiffApp::RunInteractive()
 
   MimetypeListFrameBase* mimetypeListFrame = new MimeTypeListFrame;
 
-  mimetypeListFrame->m_listCtrlMimetypes->InsertColumn(1,"Extensions");
-  mimetypeListFrame->m_listCtrlMimetypes->InsertColumn(2,"Aufruf");
+  mimetypeListFrame->m_listCtrlMimetypes->InsertColumn(1,_T("Extensions"));
+  mimetypeListFrame->m_listCtrlMimetypes->InsertColumn(2,_T("Aufruf/ Executable "));
+  mimetypeListFrame->m_listCtrlMimetypes->InsertColumn(3,_T("Parameter"));
 
   long index=0;
   wxListItem item;
-  for (wxStringToStringHashMap::iterator it = extensions.begin();
-    it != extensions.end();
+  for (wxStringToStringHashMap::iterator it = extensions_executable_string.begin();
+    it != extensions_executable_string.end();
     ++it) {
       item.SetText(it->first);
       item.SetColumn(0);
@@ -248,27 +274,27 @@ bool wxUnivDiffApp::RunInteractive()
 wxProcess* pRunProcess;
 int wxUnivDiffApp::RunCmdMode()
 {
-  wxStringToStringHashMap::const_iterator cmd = extensions.end(); 
+  wxStringToStringHashMap::const_iterator cmd = extensions_executable_string.end(); 
   set<wxString> param_ext = getParameterFileExtensions();
 
   for(set<wxString>::const_iterator it_ext = param_ext.begin(); 
     it_ext != param_ext.end();
     it_ext++)
   {
-    cmd = extensions.find(*it_ext);
-    if (cmd!=extensions.end())
+    cmd = extensions_executable_string.find(*it_ext);
+    if (cmd!=extensions_executable_string.end())
     {
       break;
     }
   }
 
   /* if no command is found, search for default command */
-  if (cmd==extensions.end())
+  if (cmd==extensions_executable_string.end())
   {
-    cmd = extensions.find("default");
+    cmd = extensions_executable_string.find("default");
   }
 
-  if (cmd == extensions.end())
+  if (cmd == extensions_executable_string.end())
   {
     //TODO error handling
   }
