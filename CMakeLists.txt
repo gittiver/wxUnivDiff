@@ -15,7 +15,6 @@ set(PARAM_VERSION ${PARAM_VERSION_MAJOR}.${PARAM_VERSION_MINOR}.${PARAM_VERSION_
 
 project(wxUnivDiff VERSION ${PARAM_VERSION})
 
-
 include (${CMAKE_ROOT}/Modules/FindCxxTest.cmake)
 
 option(${PROJECT_NAME}_WITH_DOCS "generate Documentation" OFF)
@@ -23,14 +22,14 @@ option(${PROJECT_NAME}_WITH_TESTS "enable testing" ON)
 option(CMAKE_SUPPRESS_REGENERATION "suppress rules to re-run cmake on changes (warning: no dependency checks!)?" OFF)
 
 if (MSVC)
-  option(PROJECT_LINK_MSVC_MT "link with /MT instead of /MD (use msvc runtime dlls versus static linked)" ON) 
+  option(${PROJECT_NAME}_LINK_MSVC_MT "link with /MT instead of /MD (use msvc runtime dlls versus static linked)" ON) 
   # see http://msdn.microsoft.com/en-us/library/2kzt1wy3%28VS.71%29.aspx   
-  if (PROJECT_LINK_MSVC_MT)
+  if (${PROJECT_NAME}_LINK_MSVC_MT)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
     set(CMAKE_C_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-  endif (PROJECT_LINK_MSVC_MT)
+  endif (${PROJECT_NAME}_LINK_MSVC_MT)
 
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /INCREMENTAL:NO")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /W4")
@@ -127,8 +126,6 @@ if(${PROJECT_NAME}_WITH_TESTS)
   endif(CXXTEST_FOUND)
 endif(${PROJECT_NAME}_WITH_TESTS)
 
-project( ${PROJECT_NAME} )
-
 include(InstallRequiredSystemLibraries)
 
 set(CPACK_GENERATOR TGZ ZIP)
@@ -152,7 +149,7 @@ set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
-set(CPACK_SOURCE_IGNORE_FILES "/docs/html;/autom4te.cache;/build/;/win32/;/.svn/;~$;${CPACK_SOURCE_IGNORE_FILES}")
+set(CPACK_SOURCE_IGNORE_FILES "/docs/html;/autom4te.cache;/build/;/win32/;/.svn/;.git/;~$;${CPACK_SOURCE_IGNORE_FILES}")
 
 if(WIN32 AND NOT UNIX)
   set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}\\\\${PROJECT_VERSION}")
