@@ -16,6 +16,6 @@ typedef struct {
 
 options_t& getOptions();
 
-bool isCmdLineSwitch(const wxString& param);
+//bool isCmdLineSwitch(const wxString& param);
 
 #endif // #ifndef CMDLINE_HPP
