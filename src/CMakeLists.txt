@@ -6,6 +6,7 @@ set(LIB_libwxUnivDiff_SOURCES
 
 set(PROGRAM_wxUnivDiff_SOURCES
         wxUnivDiffApp.cpp wxUnivDiffApp.hpp
+MimeTypeListFrame.hpp MimeTypeListFrame.cpp
 )
 
 # Did we find wxWidgets ? This condition will fail

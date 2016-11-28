@@ -14,13 +14,14 @@
 #include "ui.h"
 #include "cmdline.hpp"
 
-using namespace ui;
+#include "MimetypeListFrame.hpp"
+
 using std::list;
 using std::set;
 
 IMPLEMENT_APP(wxUnivDiffApp)
 
-  wxUnivDiffApp::wxUnivDiffApp(void)
+wxUnivDiffApp::wxUnivDiffApp(void)
 {}
 
 wxUnivDiffApp::~wxUnivDiffApp(void)
@@ -62,24 +63,31 @@ bool wxUnivDiffApp::OnCmdLineParsed	(	wxCmdLineParser & 	parser	)
   options.diff = !(options.list||options.add||options.del||options.interactive);
 
   //Parse commandline parameters which are not switches
-  wxString param;
-  for (size_t i=0; i <parser.GetParamCount(); ++i) {
-    param = parser.GetParam(i);
-    if (!isCmdLineSwitch(param)) {
-      parameters.push_back(param);
+  for (wxCmdLineArgs::const_iterator itarg=parser.GetArguments().begin();
+                                   itarg!=parser.GetArguments().end();
+                                   ++itarg)
+  {
+    wxString optionName;
+    switch (itarg->GetKind())
+    {
+    case wxCMD_LINE_PARAM:
+        parameters.push_back(itarg->GetStrVal());
+        break;
+    default:
+      // do nothing for other than (string) parameters
+      break;
     }
   }
+
   return true;
 }
-
-using namespace ui;
 
 wxStringToStringHashMap extensions_executable_string;
 wxStringToStringHashMap extensions_parameters;
 
 const char* const DEFAULT = _("extensions/default");
 
-void setExtension(const wxString& key,const wxString& executable_string,const wxString& parameters=_(""))
+void setExtension(const wxString& key,const wxString& executable_string,const wxString& parameters)
 {
   extensions_executable_string[key] = executable_string;
   extensions_parameters[key] = parameters;
@@ -164,77 +172,7 @@ void LoadExtensions()
 
 bool wxUnivDiffApp::RunInteractive()
 {
-  //  wxArrayString r;
-  //  // long result = wxShell("echo abc; exit", r);
-  //  p.Redirect();
-  //  long  result =  wxExecute("date",wxEXEC_ASYNC,&p);
-  //  wxInputStream* in = p.GetInputStream();
-  //
-  //  wxChar buf[1024];
-  //  while(in->CanRead())
-  //  {
-  //    in->ReadAll(buf,sizeof(buf));
-  //    wxLogDebug(buf);
-  //  };
-  // Create the main frame window
-  //MyFrame *frame = new MyFrame(wxT("wxListCtrl Test"));
-  //MainFrame *frame = new MainFrame(NULL,wxID_ANY,wxT("tesme"));
-  //// Show the frame
-  //frame->Show(true);
-  class MimeTypeListFrame: public MimetypeListFrameBase
-  {
-  public:
-    MimeTypeListFrame()
-      : MimetypeListFrameBase(NULL,wxID_ANY,wxT("Verknuepfte Anwendungen")) {}
-
-    void OnApply( wxCommandEvent& /*event*/ )
-    {
-      WriteExtensions();
-    }
-    void OnCancel( wxCommandEvent& /*event */)
-    {
-      Close();
-    }
-    void OnOk( wxCommandEvent& /*event*/ )
-    {
-      WriteExtensions();
-      Close();
-    }
-    void OnHelp( wxCommandEvent& /*event*/ )
-    {
-      wxMessageBox(_T("Help"));
-    }
-
-    void OnListItemActivated( wxListEvent& event )
-    {
-      wxString key;
-      wxFileName fname;
-      int index = event.GetIndex();
-
-      EditEntryDialog dlg(this);
-
-      dlg.m_textCtrlExtension->SetValue(this->m_listCtrlMimetypes->GetItemText(index,0));
-      fname = this->m_listCtrlMimetypes->GetItemText(index,1);
-      dlg.m_filePickerCommand->SetFileName(fname);
-
-      int result = dlg.ShowModal();
-      if (result==wxID_OK)
-      {
-        key = dlg.m_textCtrlExtension->GetValue();
-        fname = dlg.m_filePickerCommand->GetFileName(); 
-
-        this->m_listCtrlMimetypes->SetItem(index, 0,key );
-        this->m_listCtrlMimetypes->SetItem(index, 1,fname.GetFullPath() );
-        setExtension(key,fname.GetFullPath());
-      }
-    }
-  };
-
-  MimetypeListFrameBase* mimetypeListFrame = new MimeTypeListFrame;
-
-  mimetypeListFrame->m_listCtrlMimetypes->InsertColumn(1,_T("Extensions"));
-  mimetypeListFrame->m_listCtrlMimetypes->InsertColumn(2,_T("Aufruf/ Executable "));
-  mimetypeListFrame->m_listCtrlMimetypes->InsertColumn(3,_T("Parameter"));
+  MimeTypeListFrame* mimetypeListFrame = new MimeTypeListFrame;
 
   long index=0;
   wxListItem item;
@@ -342,6 +280,3 @@ int wxUnivDiffApp::OnRun(void)
     return wxApp::OnRun();
   }
 }
-
-
-

@@ -30,4 +30,8 @@ private:
 
 DECLARE_APP(wxUnivDiffApp)
 
+void WriteExtensions();
+void setExtension(const wxString& key,const wxString& executable_string,const wxString& parameters=_(""));
+
+
 #endif // #ifndef wxUnivDiffApp_hpp
