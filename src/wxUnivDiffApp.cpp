@@ -82,6 +82,17 @@ bool wxUnivDiffApp::OnCmdLineParsed	(	wxCmdLineParser & 	parser	)
   return true;
 }
 
+class ExtensionConfiguration {
+public:
+  void setExtension(const wxString& key,const wxString& executable_string,const wxString& parameters);
+
+  void WriteExtensions();
+  void LoadExtensions();
+private:
+  wxStringToStringHashMap extensions_executable_string;
+  wxStringToStringHashMap extensions_parameters;
+};
+
 wxStringToStringHashMap extensions_executable_string;
 wxStringToStringHashMap extensions_parameters;
 
@@ -238,7 +249,7 @@ int wxUnivDiffApp::RunCmdMode()
   }
   else
   {
-    wxString cmd(cmd->second);
+    wxString command(cmd->second);
 
     // append parameters from commandline
     for (list<wxString>::const_iterator
@@ -246,12 +257,12 @@ int wxUnivDiffApp::RunCmdMode()
       param != parameters.end();
     ++param)
     {
-      cmd.append(" ");
-      cmd.append(*param);
+      command.append(" ");
+      command.append(*param);
     }
 
     // and run it ...
-    pRunProcess = wxProcess::Open(cmd);
+    pRunProcess = wxProcess::Open(command);
   }
 
   // TODO what should we do on EXIT_FAILURE ?

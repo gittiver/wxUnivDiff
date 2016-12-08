@@ -1,12 +1,14 @@
 set(PROGRAM_wxUnivDiff "wxUnivDiff")
+
 set(LIB_libwxUnivDiff_SOURCES
     ui.cpp ui.h
     cmdline.hpp cmdline.cpp 
+    extensionconfiguration.hpp extensionconfiguration.cpp
+    MimeTypeListFrame.hpp MimeTypeListFrame.cpp
 )
 
 set(PROGRAM_wxUnivDiff_SOURCES
         wxUnivDiffApp.cpp wxUnivDiffApp.hpp
-MimeTypeListFrame.hpp MimeTypeListFrame.cpp
 )
 
 # Did we find wxWidgets ? This condition will fail

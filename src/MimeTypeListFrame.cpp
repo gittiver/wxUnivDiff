@@ -29,6 +29,7 @@ void MimeTypeListFrame::OnOk( wxCommandEvent& /*event*/ )
 }
 void MimeTypeListFrame::OnHelp( wxCommandEvent& /*event*/ )
 {
+  // TODO: implement help
   wxMessageBox(_T("Help"));
 }
 
