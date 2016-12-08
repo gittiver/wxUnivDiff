@@ -1,3 +1,5 @@
+#include <wx/intl.h>
+#include "wx/config.h"
 #include "wx/hashmap.h"
 #include "extensionconfiguration.hpp"
 
@@ -15,13 +17,6 @@ void ExtensionConfiguration::setExtension(const wxString& key,const wxString& ex
 }
 
 void ExtensionConfiguration::Write()
-{}
-
-void ExtensionConfiguration::Load()
-{}
-
-
-void WriteExtensions()
 {
   wxConfigBase* config= wxConfig::Get();
   wxString strOldPath;
@@ -51,8 +46,7 @@ void WriteExtensions()
   // TODO we have to delete entries not in extension list
 }
 
-
-void LoadExtensions()
+void ExtensionConfiguration::Load()
 {
   wxConfigBase* config= wxConfig::Get();
 
