@@ -1,31 +1,43 @@
 #include <wx/intl.h>
-#include "wx/config.h"
-#include "wx/hashmap.h"
-#include "extensionconfiguration.hpp"
+#include <wx/config.h>
 
+#include "extensionconfiguration.hpp"
 
 const char* const DEFAULT = _("extensions/default");
 
 void ExtensionConfiguration::setExtension(const wxString& key,const wxString& executable_string,const wxString& parameters)
 {
-  extensions_executable_string[key] = executable_string;
-  extensions_parameters[key] = parameters;
+  Entry entry = { executable_string, parameters };
+  entries[key] = entry; 
   //wxConfigBase* config= wxConfig::Get();
   //config->SetPath("/extensions");
   //config->Write(key,value);
   //config->Flush();
 }
 
-void ExtensionConfiguration::Write()
+/** return null if none found, else the found entry or defaultentry  */
+const ExtensionConfiguration::Entry* const ExtensionConfiguration::getExtensionEntry(const wxString& key) const
+{
+  EntryMap::const_iterator it= entries.find(key);
+  return (it == entries.end()) ? NULL : &(it->second);
+}
+
+const ExtensionConfiguration::EntryMap& ExtensionConfiguration::getEntries() const
+{
+  return entries;
+} 
+
+void ExtensionConfiguration::Write() const
 {
   wxConfigBase* config= wxConfig::Get();
   wxString strOldPath;
   wxStringToStringHashMap::const_iterator parameters_it;
 
   config->SetPath("/extensions");
-  for( wxStringToStringHashMap::const_iterator
-      it = extensions_executable_string.begin();
-      it != extensions_executable_string.end();
+
+  for( EntryMap::const_iterator
+      it = entries.begin();
+      it != entries.end();
       ++it
       )
   {
@@ -33,13 +45,8 @@ void ExtensionConfiguration::Write()
 
     config->Write(it->first,_("executable"));
     config->SetPath(it->first);
-    config->Write(_("executable"),it->second);
-
-    parameters_it = extensions_parameters.find(it->first);
-    if (parameters_it != extensions_parameters.end())
-    {
-      config->Write(_("parameters"),parameters_it->second);
-    }
+    config->Write(_("executable"),(it->second).executable_string);
+    config->Write(_("parameters"),(it->second).parameters);
 
     config->SetPath(strOldPath);
   }
@@ -77,7 +84,7 @@ void ExtensionConfiguration::Load()
     if (!value.IsSameAs(_("executable")))
     {
       // old format: extension = executable
-      extensions_executable_string[str] = value;
+      entries[str].executable_string = value; 
     }
     else
     {

@@ -1,22 +1,59 @@
 #include <wx/msgdlg.h>
 
-#include "wxUnivDiffApp.hpp"
 #include "MimeTypeListFrame.hpp"
-
+#include "extensionconfiguration.hpp"
 using namespace ui;
 
-MimeTypeListFrame::MimeTypeListFrame()
+MimeTypeListFrame::MimeTypeListFrame(ExtensionConfiguration* pModel)
   : MimetypeListFrameBase(NULL,wxID_ANY,wxT("Verknuepfte Anwendungen")) 
 {
   m_listCtrlMimetypes->InsertColumn(1,_T("Extensions"));
   m_listCtrlMimetypes->InsertColumn(2,_T("Aufruf/ Executable "));
   m_listCtrlMimetypes->InsertColumn(3,_T("Parameter"));
+  this->pModel = pModel;
 
 }
 
+void MimeTypeListFrame::loadModel() 
+{
+  long index=0;
+  wxListItem item;
+  
+  m_listCtrlMimetypes->DeleteAllItems();
+  
+  if (!pModel) 
+  {
+    // TODO handle error somehow ...
+  }
+  else
+  {
+    m_listCtrlMimetypes->DeleteAllItems();
+
+    for (ExtensionConfiguration::EntryMap::const_iterator 
+      it = pModel->getEntries().begin(); 
+      it != pModel->getEntries().end();
+      ++it
+        )
+    {
+      item.SetText(it->first);
+      item.SetColumn(0);
+      item.SetId(index);
+      index = m_listCtrlMimetypes->InsertItem( item );
+
+      item.SetId(index);
+      item.SetColumn(1);
+      item.SetText((it->second).executable_string);
+      m_listCtrlMimetypes->SetItem(item);
+
+      m_listCtrlMimetypes->SetItem(index, 2, it->second.parameters );
+    }
+  }
+}
+
+
 void MimeTypeListFrame::OnApply( wxCommandEvent& /*event*/ )
 {
-  WriteExtensions();
+  if (pModel) pModel->Write();
 }
 void MimeTypeListFrame::OnCancel( wxCommandEvent& /*event */)
 {
@@ -24,7 +61,7 @@ void MimeTypeListFrame::OnCancel( wxCommandEvent& /*event */)
 }
 void MimeTypeListFrame::OnOk( wxCommandEvent& /*event*/ )
 {
-  WriteExtensions();
+  if (pModel) pModel->Write();
   Close();
 }
 void MimeTypeListFrame::OnHelp( wxCommandEvent& /*event*/ )
@@ -53,6 +90,7 @@ void MimeTypeListFrame::OnListItemActivated( wxListEvent& event )
 
     this->m_listCtrlMimetypes->SetItem(index, 0,key );
     this->m_listCtrlMimetypes->SetItem(index, 1,fname.GetFullPath() );
-    setExtension(key,fname.GetFullPath());
+    if (pModel) pModel->setExtension(key,fname.GetFullPath());
   }
 }
+

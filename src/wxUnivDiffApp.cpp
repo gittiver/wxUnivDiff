@@ -1,10 +1,8 @@
-#include <wx/docview.h>
 #include <wx/cmdproc.h>
 #include <wx/menu.h>
 #include <wx/image.h>
 #include <wx/cmdline.h>
 #include <wx/process.h>
-#include <wx/stream.h>
 #include <wx/msgdlg.h>
 #include <list>
 #include <set>
@@ -15,6 +13,7 @@
 #include "cmdline.hpp"
 
 #include "MimetypeListFrame.hpp"
+#include "extensionconfiguration.hpp"
 
 using std::list;
 using std::set;
@@ -82,125 +81,12 @@ bool wxUnivDiffApp::OnCmdLineParsed	(	wxCmdLineParser & 	parser	)
   return true;
 }
 
-class ExtensionConfiguration {
-public:
-  void setExtension(const wxString& key,const wxString& executable_string,const wxString& parameters);
+ExtensionConfiguration  extensionConfiguration;
 
-  void WriteExtensions();
-  void LoadExtensions();
-private:
-  wxStringToStringHashMap extensions_executable_string;
-  wxStringToStringHashMap extensions_parameters;
-};
-
-wxStringToStringHashMap extensions_executable_string;
-wxStringToStringHashMap extensions_parameters;
-
-const char* const DEFAULT = _("extensions/default");
-
-void setExtension(const wxString& key,const wxString& executable_string,const wxString& parameters)
+bool wxUnivDiffApp::RunInteractive() const
 {
-  extensions_executable_string[key] = executable_string;
-  extensions_parameters[key] = parameters;
-  //wxConfigBase* config= wxConfig::Get();
-  //config->SetPath("/extensions");
-  //config->Write(key,value);
-  //config->Flush();
-
-}
-
-void WriteExtensions()
-{
-  wxConfigBase* config= wxConfig::Get();
-  wxString strOldPath;
-  wxStringToStringHashMap::const_iterator parameters_it;
-
-  config->SetPath("/extensions");
-  for( wxStringToStringHashMap::const_iterator 
-    it = extensions_executable_string.begin();
-    it != extensions_executable_string.end();
-  ++it
-    )
-  {
-    strOldPath = config->GetPath();
-    
-    config->Write(it->first,_("executable"));
-    config->SetPath(it->first);
-    config->Write(_("executable"),it->second);
-    
-    parameters_it = extensions_parameters.find(it->first);
-    if (parameters_it != extensions_parameters.end())
-    {
-      config->Write(_("parameters"),parameters_it->second);
-    }
-    
-    config->SetPath(strOldPath);
-  }
-  // TODO we have to delete entries not in extension list
-}
-
-
-void LoadExtensions()
-{
-  wxConfigBase* config= wxConfig::Get();
-
-  if (!config->HasGroup(_("extensions")) ) 
-  {
-    config->Write("extensions/txt","self");
-    config->Write("extensions/bin","selfbin");
-#ifdef __APPLE__
-    config->Write(DEFAULT,"/usr/bin/diffmerge.sh");
-#elif defined( WIN32 )
-    config->Write(DEFAULT, "C:\\Tools\\WinMerge\\WinMergeU.exe");
-#else
-    // TODO write default application config for other systems
-#endif // #ifdef __APPLE__
-
-    config->Flush();
-  } 
-
-  // TODO in any case there should be a default entry
-
-  wxString str;
-  long lIndex;
-  wxString value;
-  config->SetPath("/extensions");
-  bool cont = config->GetFirstEntry(str, lIndex);
-  do {
-    config->Read(str,&value);
-    if (!value.IsSameAs(_("executable")))
-    {
-      // old format: extension = executable
-      extensions_executable_string[str] = value;
-    }
-    else 
-    {
-      // TODO read new format
-    }
-    cont = config->GetNextEntry(str,lIndex);
-  } while(cont);
-}
-
-bool wxUnivDiffApp::RunInteractive()
-{
-  MimeTypeListFrame* mimetypeListFrame = new MimeTypeListFrame;
-
-  long index=0;
-  wxListItem item;
-  for (wxStringToStringHashMap::iterator it = extensions_executable_string.begin();
-    it != extensions_executable_string.end();
-    ++it) {
-      item.SetText(it->first);
-      item.SetColumn(0);
-      item.SetId(index);
-      index = mimetypeListFrame->m_listCtrlMimetypes->InsertItem( item );
-
-      item.SetId(index);
-      item.SetColumn(1);
-      item.SetText(it->second);
-
-      mimetypeListFrame->m_listCtrlMimetypes->SetItem(index, 1,it->second );
-  }
+  MimeTypeListFrame* mimetypeListFrame = new MimeTypeListFrame(&extensionConfiguration);
+  mimetypeListFrame->loadModel();
 
   return mimetypeListFrame->Show(true);
 
@@ -221,36 +107,39 @@ bool wxUnivDiffApp::RunInteractive()
 
 
 wxProcess* pRunProcess;
-int wxUnivDiffApp::RunCmdMode()
+int wxUnivDiffApp::RunCmdMode() const
 {
-  wxStringToStringHashMap::const_iterator cmd = extensions_executable_string.end(); 
+  //wxStringToStringHashMap::const_iterator cmd = extensionConfiguration.extensions_executable_string.end(); 
   set<wxString> param_ext = getParameterFileExtensions();
-
+  
+  const ExtensionConfiguration::Entry* pEntry = NULL;
+  
   for(set<wxString>::const_iterator it_ext = param_ext.begin(); 
     it_ext != param_ext.end();
     it_ext++)
   {
-    cmd = extensions_executable_string.find(*it_ext);
-    if (cmd!=extensions_executable_string.end())
+    pEntry = extensionConfiguration.getExtensionEntry(*it_ext); 
+    if (pEntry!=NULL)
     {
       break;
     }
   }
 
   /* if no command is found, search for default command */
-  if (cmd==extensions_executable_string.end())
+  if (pEntry==NULL)
   {
-    cmd = extensions_executable_string.find("default");
+    pEntry = extensionConfiguration.getExtensionEntry("default");
   }
 
-  if (cmd == extensions_executable_string.end())
+  if (pEntry==NULL)
   {
     //TODO error handling
   }
   else
   {
-    wxString command(cmd->second);
+    wxString command(pEntry->executable_string);
 
+    // TODO add extension parameters and replace $1..$n with parameter values
     // append parameters from commandline
     for (list<wxString>::const_iterator
       param = parameters.begin();
@@ -272,14 +161,25 @@ int wxUnivDiffApp::RunCmdMode()
 bool wxUnivDiffApp::OnInit(void)
 {
   ::wxInitAllImageHandlers();
+  bool success = false;
 
   if ( !wxApp::OnInit() )
-    return false;
+  {
+  }
+  else 
+  {
+    extensionConfiguration.Load();
 
-  LoadExtensions();
-  if (!getOptions().diff)
-    return RunInteractive();
-  return true;
+    if (!getOptions().diff)
+    {  
+      success = RunInteractive();
+    }
+    else
+    { 
+      success = true;
+    }
+  }
+  return success;
 }
 
 int wxUnivDiffApp::OnRun(void)

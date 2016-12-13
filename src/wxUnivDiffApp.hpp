@@ -2,7 +2,6 @@
 #define wxUnivDiffApp_hpp
 
 #include <wx/app.h>
-#include <wx/config.h>
 
 class wxUnivDiffApp : public wxApp
 {
@@ -23,15 +22,11 @@ protected:
     bool OnInit(void);
     int OnRun(void);
 private:
-    bool RunInteractive();
-    int RunCmdMode();
+    bool RunInteractive() const;
+    int RunCmdMode() const;
 
 };
 
 DECLARE_APP(wxUnivDiffApp)
-
-void WriteExtensions();
-void setExtension(const wxString& key,const wxString& executable_string,const wxString& parameters=_(""));
-
 
 #endif // #ifndef wxUnivDiffApp_hpp
