@@ -24,7 +24,6 @@ protected:
 private:
     bool RunInteractive() const;
     int RunCmdMode() const;
-
 };
 
 DECLARE_APP(wxUnivDiffApp)

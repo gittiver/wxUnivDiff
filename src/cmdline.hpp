@@ -1,8 +1,7 @@
 #ifndef CMDLINE_HPP
 #define CMDLINE_HPP
 
-#include <wx/cmdline.h>
-
+struct wxCmdLineEntryDesc;
 const wxCmdLineEntryDesc* getCmdlineEntryDesc();
 
 typedef struct {
@@ -15,7 +14,5 @@ typedef struct {
 } options_t;
 
 options_t& getOptions();
-
-//bool isCmdLineSwitch(const wxString& param);
 
 #endif // #ifndef CMDLINE_HPP

@@ -1,3 +1,4 @@
+#include <wx/cmdline.h>
 #include "cmdline.hpp"
 
 static const wxCmdLineEntryDesc cmdLineDesc[] = {
@@ -24,30 +25,3 @@ const wxCmdLineEntryDesc* getCmdlineEntryDesc()
 
 options_t& getOptions() 
 { return options; }
-
-//bool isCmdLineSwitch(const wxString& param)
-//{
-//  for (size_t option_index=0;
-//    option_index < sizeof(cmdLineDesc)/sizeof(cmdLineDesc[0])-1;
-//    ++option_index)
-//  {
-//    if ( ( cmdLineDesc[option_index].kind == wxCMD_LINE_OPTION ||  cmdLineDesc[option_index].kind == wxCMD_LINE_SWITCH ) )
-//    if ( param.StartsWith("-") ) 
-//    {
-//      if (param.StartsWith("--"))  
-//      {
-//        if ( param.substr(2).StartsWith(cmdLineDesc[option_index].longName ) ) {
-//          return true;
-//        }
-//      } 
-//      else 
-//      {
-//        if ( param.substr(1).StartsWith(cmdLineDesc[option_index].shortName ) ) {
-//          return true;
-//        }
-//      }
-//    }
-//  }
-//  return false;
-//}
-
