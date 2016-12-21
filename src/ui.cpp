@@ -145,6 +145,13 @@ EditEntryDialog::EditEntryDialog( wxWindow* parent, wxWindowID id, const wxStrin
 	m_textCtrlExtension = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer1->Add( m_textCtrlExtension, 1, wxALL|wxEXPAND, 5 );
 	
+	m_staticTextParameters = new wxStaticText( this, wxID_ANY, _("Parameters"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextParameters->Wrap( -1 );
+	fgSizer1->Add( m_staticTextParameters, 0, wxALL, 5 );
+	
+	m_textCtrlParameters = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer1->Add( m_textCtrlParameters, 0, wxALL|wxEXPAND, 5 );
+	
 	bSizer5->Add( fgSizer1, 1, wxEXPAND, 5 );
 	
 	m_sdbSizer2 = new wxStdDialogButtonSizer();

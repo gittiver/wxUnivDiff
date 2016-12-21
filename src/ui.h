@@ -94,6 +94,7 @@ namespace ui
 		protected:
 			wxStaticText* m_staticTextCommand;
 			wxStaticText* m_staticTextExtension;
+			wxStaticText* m_staticTextParameters;
 			wxStdDialogButtonSizer* m_sdbSizer2;
 			wxButton* m_sdbSizer2OK;
 			wxButton* m_sdbSizer2Cancel;
@@ -102,8 +103,9 @@ namespace ui
 		public:
 			wxFilePickerCtrl* m_filePickerCommand;
 			wxTextCtrl* m_textCtrlExtension;
+			wxTextCtrl* m_textCtrlParameters;
 			
-			EditEntryDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Edit Entry"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 586,169 ), long style = wxDEFAULT_DIALOG_STYLE );
+			EditEntryDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Edit Entry"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 586,246 ), long style = wxDEFAULT_DIALOG_STYLE );
 			~EditEntryDialog();
 		
 	};
