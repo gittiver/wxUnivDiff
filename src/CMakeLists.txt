@@ -1,7 +1,10 @@
 set(PROGRAM_wxUnivDiff "wxUnivDiff")
+
 set(LIB_libwxUnivDiff_SOURCES
     ui.cpp ui.h
     cmdline.hpp cmdline.cpp 
+    extensionconfiguration.hpp extensionconfiguration.cpp
+    MimeTypeListFrame.hpp MimeTypeListFrame.cpp
 )
 
 set(PROGRAM_wxUnivDiff_SOURCES
