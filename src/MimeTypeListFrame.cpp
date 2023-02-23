@@ -74,7 +74,7 @@ void MimeTypeListFrame::OnListItemActivated( wxListEvent& event )
 {
   wxString key;
   wxFileName fname;
-  int index = event.GetIndex();
+  long index = event.GetIndex();
 
   EditEntryDialog dlg(this);
 

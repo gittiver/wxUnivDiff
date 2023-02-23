@@ -20,10 +20,20 @@ if(wxWidgets_FOUND)
     
     add_library(libwxunivDiff ${LIB_libwxUnivDiff_SOURCES})
 
+
+  if(APPLE)
+    # Set a custom plist file for the app bundle - needed for Mac OS Retina display
     add_executable(${PROGRAM_wxUnivDiff}
                    WIN32 MACOSX_BUNDLE
                    ${PROGRAM_wxUnivDiff_SOURCES})
-    target_link_libraries(${PROGRAM_wxUnivDiff} ${wxWidgets_LIBRARIES} "libwxunivDiff")
+    set_target_properties(${PROGRAM_wxUnivDiff} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
+else()
+    # the WIN32 is needed for Windows in order for it to look for WinMain
+    # instead of the main function. This is ignored on other systems,
+    # so it works on all platforms
+    add_executable(${PROGRAM_wxUnivDiff} WIN32 ${SRCS} main.exe.manifest)
+endif()
+      target_link_libraries(${PROGRAM_wxUnivDiff} ${wxWidgets_LIBRARIES} "libwxunivDiff")
 
     if (MSVC)
         set_property(TARGET ${PROGRAM_wxUnivDiff}

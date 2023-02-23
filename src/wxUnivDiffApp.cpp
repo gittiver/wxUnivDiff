@@ -12,7 +12,7 @@
 #include "ui.h"
 #include "cmdline.hpp"
 
-#include "MimetypeListFrame.hpp"
+#include "MimeTypeListFrame.hpp"
 #include "extensionconfiguration.hpp"
 
 using std::list;

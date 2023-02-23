@@ -24,13 +24,13 @@ cd $STARTDIR
 
 else 
 
-WXDIR=$STARTDIR/../wxWidgets/3.1.0
+WXDIR=$STARTDIR/../wxWidgets/3.2.2.1
 
 cmake -DwxUnivDiff_WITH_DOCS:bool=ON \
 	  -DwxUnivDiff_WITH_TESTS:bool=ON \
       -DCXXTEST_INCLUDE_DIR=$STARTDIR/3rdparty/cxxtest \
       -DCXXTEST_PYTHON_TESTGEN_EXECUTABLE=$STARTDIR/3rdparty/cxxtest/bin/cxxtestgen \
-      -DwxWidgets_CONFIG_EXECUTABLE:FILEPATH=$WXDIR/build-cocoa-debug/wx-config \
+      -DwxWidgets_CONFIG_EXECUTABLE:FILEPATH=$WXDIR/build-debug/wx-config \
       ../..
 
 cmake --build . --target all
@@ -45,7 +45,7 @@ cmake -DwxUnivDiff_WITH_DOCS:bool=ON \
 	  -DwxUnivDiff_WITH_TESTS:bool=ON \
       -DCXXTEST_INCLUDE_DIR=3rdparty/cxxtest \
       -DCXXTEST_PYTHON_TESTGEN_EXECUTABLE=3rdparty/cxxtest/bin/cxxtestgen \
-      -DwxWidgets_CONFIG_EXECUTABLE:FILEPATH=$WXDIR/build-cocoa-debug/wx-config \
+      -DwxWidgets_CONFIG_EXECUTABLE:FILEPATH=$WXDIR/build-debug/wx-config \
       -G Xcode ../..
 cd $STARTDIR
 
