@@ -75,7 +75,9 @@ find_package(wxWidgets REQUIRED core base)
 # the proper wxWidgets configuration
 if(wxWidgets_FOUND)
     # Include wxWidgets macros
+if(wxWidgets_USE_FILE) # not defined in CONFIG mode
     include(${wxWidgets_USE_FILE})
+endif() 
     set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS ${wxWidgets_DEFINITIONS})
 else(wxWidgets_FOUND)
     # For convenience. When we cannot continue, inform the user
@@ -134,6 +136,7 @@ if(WIN32 AND NOT CYGWIN)
 endif(WIN32 AND NOT CYGWIN)
 if(APPLE)
   set(CPACK_GENERATOR DragNDrop ${CPACK_GENERATOR})
+  set(CPACK_BUNDLE_NAME "net.softwareschmied.${PROJECT_NAME}") 
 endif(APPLE)
 if (UNIX AND NOT APPLE AND NOT WIN32)
   set(CPACK_GENERATOR DEB ${CPACK_GENERATOR})
